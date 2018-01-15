@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Pops 验证</title>
+		<link rel="stylesheet" href="css/index.css" />
+		<script src="js/vue.min.js"></script>
+	</head>
+
+	<body>
+		<div id="app">
+
+			姓名：
+			<input type="text" id="Name" v-model='name' /> 年龄：
+			<input type="text" id="Age" v-model='age' />
+
+			<!-- <my-component v-bind:my-name="name" v-bind:my-age="age"></my-component> -->
+
+			<!-- 简写 传入参数 (默认是单向绑定)-->
+			<my-component :my-name="name" :my-age="age"></my-component>
+
+			<!-- sync 标识为双向绑定-->
+			<!-- <my-component :my-name.sync="name" :my-age.sync="age"></my-component> -->
+
+			<!-- once 单次绑定 -->
+			<!-- <my-component :my-name.once="name" :my-age.once="age"></my-component> -->
+		</div>
+
+		<div id="app1">
+			<div id="searchBar">
+				Search <input type="text" v-model="searchQuery" />
+			</div>
+			<simple-grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery"></simple-grid>
+		</div>
+
+	</body>
+
+	<template id="mycomponent">
+		<div>This is the 语法糖 component!</div>
+
+		<div id="testID">{{a}}</div>
+
+		<div>{{b}}</div>
+
+		<button v-on:click="onTestClick">{{Test}}</button>
+
+		<input type="text" v-model="b" />
+
+		<span>姓名: {{myName}}</span>
+
+		<span>年龄: {{myAge}}</span>
+
+	</template>
+
+	<template id="grid-template">
+		<table>
+			<thead>
+				<tr>
+					<!-- Scpript 表达式，首字母大写 -->
+					<th v-for="col in columns">
+						{{ col | capitalize }}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="entry in data | filterBy filterKey">
+					<td v-for="col in columns">
+						{{entry[col]}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</template>
+
+	<script>
+		// 语法糖， 构造并且注册一个组件
+		Vue.component('my-component', {
+			template: '#mycomponent',
+
+			data: function() {
+				return {
+					a: 100,
+					b: '100',
+					Test: '测试'
+				}
+			},
+
+			methods: {
+				// 监听搜索输入事件
+				onTestClick: function() {
+					alert("1111");
+				},
+
+				onTestInputChange: function(val, oldVal) {
+					console.log('new: %s, old: %s', val, oldVal)
+				}
+
+			},
+
+			watch: {
+				/// 使用匿名函数
+				/*'b': function(val, oldVal) {
+					console.log('new: %s, old: %s', val, oldVal)
+				}*/
+
+				/// 使用函数名
+				'b': 'onTestInputChange'
+			},
+
+			/// 传递参数， 必须是数组 或者对象 Array | Object， 命名为 camelCase 驼峰命名法， 需要转为 kebab-case（短横线隔开）
+			props: ['myName', 'myAge']
+		});
+
+		// 4.挂在vue实例
+		var vueApp = new Vue({
+			el: '#app',
+
+			data: {
+				name: 'lee',
+				age: '28'
+			}
+		});
+
+		Vue.component('simple-grid', {
+			template: '#grid-template',
+			props: {
+				data: Array,
+				columns: Array,
+				filterKey: String
+			}
+		});
+
+		var demo = new Vue({
+			el: '#app1',
+			data: {
+				searchQuery: '',
+				gridColumns: ['name', 'age', 'sex'],
+				gridData: [{
+					name: 'Jack',
+					age: 30,
+					sex: 'Male'
+				}, {
+					name: 'Bill',
+					age: 26,
+					sex: 'Male'
+				}, {
+					name: 'Tracy',
+					age: 22,
+					sex: 'Female'
+				}, {
+					name: 'Chris',
+					age: 36,
+					sex: 'Male'
+				}]
+			}
+		})
+	</script>
+
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+
+	<body>
+		<div id="app">
+			<!-- 3. #app是Vue实例挂载的元素，应该在挂载元素范围内使用组件-->
+			<parent-component>
+				<child-component></child-component>
+			</parent-component>
+		</div>
+
+		<div id="app1">
+			<!-- 3. #app是Vue实例挂载的元素，应该在挂载元素范围内使用组件-->
+			<child-component></child-component>
+		</div>
+	</body>
+	<script src="js/vue.min.js"></script>
+	<script>
+		// 1.创建一个子组件构造器
+		var childComponent = Vue.extend({
+			template: '<div>This is icerleer Child component!</div>'
+		});
+
+		// 1.创建一个父组件构造器
+		var parentComponent = Vue.extend({
+			template: '<div>This is icerleer Parent component!</div><child-component></child-component>',
+			components: {
+				'child-component': childComponent
+			}
+		});
+
+		// 2.注册组件，并指定组件的标签，组件的HTML标签为<my-component>
+		// Vue.component('my-component', myComponent);
+
+		// 4.挂在vue实例
+		var vueApp = new Vue({
+			el: '#app',
+			components: {
+				'parent-component': parentComponent
+			}
+		});
+
+		var vueApp1 = new Vue({
+			el: '#app1'
+		});
+	</script>
+
+</html>

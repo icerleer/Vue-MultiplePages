@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>$broadcast 广播事件</title>
+		<link rel="stylesheet" href="css/index.css" />
+		<script src="js/vue.min.js"></script>
+
+	</head>
+
+	<body>
+		<div id="app">
+			<input v-model="msg" />
+			<button v-on:click="notify">Broadcast Event</button>
+			子控件1
+			<child-component></child-component>
+			子控件2
+			<child-component></child-component>
+		</div>
+
+		<template id="child-component">
+			<ul>
+				<li v-for="item in messages">
+					父组件录入了信息：{{ item }}
+				</li>
+			</ul>
+		</template>
+		
+		<template id="child-component1">
+			<ul>
+				<li v-for="item in messages1">
+					父组件录入了信息：{{ item }}
+				</li>
+			</ul>
+		</template>
+
+		<script src="js/vue.js"></script>
+		<script>
+			// 注册子组件
+			Vue.component('child-component', {
+					template: '#child-component',
+					data: function() {
+						return {
+							messages: []
+						}
+					},
+					events: {
+						'parent-msg': function(msg) {
+							this.messages.push(msg)
+						}
+					}
+				})
+			
+			Vue.component('child-component1', {
+					template: '#child-component1',
+					data: function() {
+						return {
+							messages1: []
+						}
+					},
+					events: {
+						'parent-msg': function(msg) {
+							this.messages1.push(msg)
+						}
+					}
+				})
+			
+				// 初始化父组件
+			new Vue({
+				el: '#app',
+				data: {
+					msg: ''
+				},
+				methods: {
+					notify: function() {
+						if(this.msg.trim()) {
+							this.$broadcast('parent-msg', this.msg)
+						}
+					}
+				}
+			})
+		</script>
+
+	</body>
+
+</html>

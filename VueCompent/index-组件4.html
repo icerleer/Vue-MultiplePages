@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>组件描述部分独立(脚本)</title>
+	</head>
+
+	<body>
+		<div id="app">
+			<my-component></my-component>
+		</div>
+	</body>
+	<script src="js/vue.min.js"></script>
+	
+	<script type="text/x-template" id="mycomponent">
+		<div>This is the 语法糖 component!</div>
+	</script>
+	
+	<script>
+		
+		// 语法糖， 构造并且注册一个组件
+		Vue.component('my-component',{
+		    template: '#mycomponent'
+		})
+		
+		// 4.挂在vue实例
+		var vueApp = new Vue({
+			el: '#app'
+		});
+	</script>
+
+</html>
